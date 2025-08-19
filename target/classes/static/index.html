@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparaison météo 🌡️</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Comparaison des températures : Paris, Annecy, Bordeaux</h1>
+<canvas id="meteoChart" width="800" height="400"></canvas>
+
+<script>
+    async function loadMeteo() {
+        const response = await fetch("/api/meteo");
+        const data = await response.json();
+
+        const ctx = document.getElementById('meteoChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels.slice(0, 24), // 24 premières heures
+                datasets: [
+                    {
+                        label: "Paris",
+                        data: data.valuesParis.slice(0, 24),
+                        borderColor: "blue",
+                        backgroundColor: "lightblue",
+                        fill: false,
+                        tension: 0.2
+                    },
+                    {
+                        label: "Annecy",
+                        data: data.valuesAnnecy.slice(0, 24),
+                        borderColor: "red",
+                        backgroundColor: "pink",
+                        fill: false,
+                        tension: 0.2
+                    },
+                    {
+                        label: "Bordeaux",
+                        data: data.valuesBordeaux.slice(0, 24),
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                        fill: false,
+                        tension: 0.2
+                    }
+                ]
+            }
+        });
+    }
+    loadMeteo();
+</script>
+</body>
+</html>
